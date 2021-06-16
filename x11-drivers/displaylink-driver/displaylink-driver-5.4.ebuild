@@ -47,7 +47,7 @@ src_install() {
 	DLM="${S}/${MY_ARCH}-ubuntu-${MY_UBUNTU_VERSION}/DisplayLinkManager"
 
 	dodir /opt/displaylink
-	dodir /var/log/displaylink
+	keepdir /var/log/displaylink
 
 	exeinto /opt/displaylink
 	chrpath -d "${DLM}"
