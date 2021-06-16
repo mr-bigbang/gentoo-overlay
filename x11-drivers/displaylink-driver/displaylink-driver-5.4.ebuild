@@ -3,7 +3,7 @@
 
 EAPI=6
 
-inherit eutils systemd udev
+inherit eutils udev
 
 DESCRIPTION="DisplayLink USB Graphics Software"
 HOMEPAGE="http://www.displaylink.com/downloads/ubuntu"
@@ -11,8 +11,7 @@ SRC_URI="${P}.zip"
 
 LICENSE="DisplayLink-EULA"
 SLOT="0"
-KEYWORDS="~amd64 ~arm ~x86 "
-IUSE="systemd"
+KEYWORDS="~amd64 ~x86 "
 
 QA_PREBUILT="/opt/displaylink/DisplayLinkManager"
 RESTRICT="fetch bindist"
@@ -23,7 +22,7 @@ RDEPEND=">=sys-devel/gcc-6.5.0
 	=x11-drivers/evdi-1.9*
 	virtual/libusb:1
 	>=x11-base/xorg-server-1.17.0
-	!systemd? ( sys-auth/elogind )"
+	sys-auth/elogind"
 
 pkg_nofetch() {
 	einfo "Please download DisplayLink USB Graphics Software for Ubuntu 5.4.zip from"
@@ -38,22 +37,14 @@ src_unpack() {
 }
 
 src_install() {
-	if [[ "${ARCH}" == "arm" ]]; then
-		DLM="${S}/arm-linux-gnueabihf/DisplayLinkManager"
-	else
-		#if [[ ( $(gcc-major-version) -eq 9 && $(gcc-minor-version) -ge 2 ) || $(gcc-major-version) -gt 9 ]]; then
-		MY_UBUNTU_VERSION=1604
-		#else
-		#	MY_UBUNTU_VERSION=1404
-		#fi
-		einfo "Using package for Ubuntu ${MY_UBUNTU_VERSION} based on your gcc version: $(gcc-version)"
+	MY_UBUNTU_VERSION=1604
+	einfo "Using package for Ubuntu ${MY_UBUNTU_VERSION} based on your gcc version: $(gcc-version)"
 
-		case "${ARCH}" in
-			amd64)	MY_ARCH="x64" ;;
-			*)		MY_ARCH="${ARCH}" ;;
-		esac
-		DLM="${S}/${MY_ARCH}-ubuntu-${MY_UBUNTU_VERSION}/DisplayLinkManager"
-	fi
+	case "${ARCH}" in
+		amd64)	MY_ARCH="x64" ;;
+		*)		MY_ARCH="${ARCH}" ;;
+	esac
+	DLM="${S}/${MY_ARCH}-ubuntu-${MY_UBUNTU_VERSION}/DisplayLinkManager"
 
 	dodir /opt/displaylink
 	dodir /var/log/displaylink
